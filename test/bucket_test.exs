@@ -3,7 +3,7 @@ defmodule KV.BucketTest do
 
   setup do
     {:ok, bucketPid} = KV.Bucket.start_link
-    {:ok, bucket: bucketPid}
+    {:ok, bucket: bucketPid, testProduct: "milk"}
   end
 
   test "stores values by key", %{bucket: bucket} do
@@ -15,9 +15,10 @@ defmodule KV.BucketTest do
 
   test "deletes values by key", testContext do
     %{bucket: bucketPid} = testContext
-    KV.Bucket.put(bucketPid, "milk", 3)
-    assert KV.Bucket.get(bucketPid, "milk") == 3
-    KV.Bucket.delete(bucketPid, "milk")
-    assert KV.Bucket.get(bucketPid, "milk") == nil
+    %{testProduct: product} = testContext
+    KV.Bucket.put(bucketPid, product, 3)
+    assert KV.Bucket.get(bucketPid, product) == 3
+    KV.Bucket.delete(bucketPid, product)
+    assert KV.Bucket.get(bucketPid, product) == nil
   end
 end
